@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _RAISE 2
 #define _ADJUST 3
 #define _NUMPAD 4
+#define _COLEMAK 5
 
 #define DIM_BY 10
 #define DIMMED(rgb_color) DIMMED_(rgb_color)
@@ -38,15 +39,28 @@ enum custom_keycodes {
     ENTER_TWO_PRESS,
     BACKSPACE_TWO_PRESS,
     REDO_TWO_PRESS,
-    NUMPAD
+    NUMPAD,
+    SCROLL_MODE
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    [_COLEMAK] = LAYOUT_split_3x6_3_ex2(
+    //,--------------------------------------------------------------.                            ,--------------------------------------------------------------.
+        KC_TAB,    KC_Q,    KC_W,    KC_F,    KC_P,    KC_G, TO(_QWERTY),                            KC_BRIU,    KC_J,    KC_L,    KC_U,    KC_Y,   KC_SCLN,  KC_BSPC,
+    //|--------+--------+--------+--------+--------+--------+--------|                            |--------+--------+--------+--------+--------+--------+--------|
+        KC_LSFT,    KC_A,    KC_R,    KC_S,    KC_T,    KC_D, KC_HOME,                            KC_END,    KC_H,    KC_N,    KC_E,    KC_I, KC_O, KC_QUOT,
+    //|--------+--------+--------+--------+--------+--------+--------'                            `--------+--------+--------+--------+--------+--------+--------|
+        KC_LOPT,   KC_Z,    KC_X,    KC_C,    KC_V,   KC_B,                                                  KC_K,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  TD(TD_ESC_CAPS),
+    //|--------+--------+--------+--------+--------+--------+--------.                            .--------+--------+--------+--------+--------+--------+--------|
+                                            KC_LGUI,  MO(_LOWER),  KC_SPC,                         KC_ENT, MO(_RAISE), KC_LCTL
+                                        //`--------------------------'                            `--------------------------'
+    ),
+
     [_QWERTY] = LAYOUT_split_3x6_3_ex2(
   //,--------------------------------------------------------------.                            ,--------------------------------------------------------------.
-       KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, KC_VOLU,                            KC_BRIU,    KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
+       KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, TO(_COLEMAK),                            KC_BRIU,    KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------+--------|                            |--------+--------+--------+--------+--------+--------+--------|
-      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, KC_VOLD,                            KC_BRID,    KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
+      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, KC_HOME,                            KC_END,    KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
   //|--------+--------+--------+--------+--------+--------+--------'                            `--------+--------+--------+--------+--------+--------+--------|
       KC_LOPT,   KC_Z,    KC_X,    KC_C,    KC_V,   KC_B,                                                  KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  TD(TD_ESC_CAPS),
   //|--------+--------+--------+--------+--------+--------+--------.                            .--------+--------+--------+--------+--------+--------+--------|
@@ -111,7 +125,7 @@ void keyboard_post_init_user(void) {
 // Tap Dance definitions
 tap_dance_action_t tap_dance_actions[] = {
     // Tap once for Escape, twice for Caps Lock
-    [TD_ESC_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS),
+    [TD_ESC_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS)
 };
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
@@ -161,6 +175,9 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         case _ADJUST:
             rgb_matrix_set_color_all(DIMMED(RGB_AZURE));
             break;
+        case _COLEMAK:
+            rgb_matrix_set_color_all(DIMMED(RGB_AZURE));
+            break;
 
         default: //  for any other layers, or the default layer
             rgb_matrix_set_color_all(RGB_OFF);
@@ -181,3 +198,79 @@ combo_t key_combos[] = {
   [BACKSPACE_TWO_PRESS] = COMBO(backspace_two_press_combo, KC_BSPC),
   [REDO_TWO_PRESS] = COMBO(redo_two_press_combo, LGUI(LSFT(KC_Z))),
 };
+
+static bool right_encoder_scroll_enabled = false;
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case KC_BRIU:
+            if (record->event.pressed) {
+                // Toggle the right encoder mode whenever KC_BRIU is pressed.
+                right_encoder_scroll_enabled = !right_encoder_scroll_enabled;
+                // Optionally add a debug print:
+                // xprintf("Right encoder mode: %s\n", right_encoder_scroll_enabled ? "Scroll" : "Cursor");
+            }
+            // Prevent default brightness adjustment.
+            return true;
+        default:
+            return true; // Process all other keycodes normally.
+    }
+}
+
+bool encoder_update_user(uint8_t index, bool clockwise) {
+    // Check for the right encoder (assuming index 2 is the right encoder)
+    if (index == 1) {
+        if (right_encoder_scroll_enabled) {
+            // Scroll Mode: scroll up or down
+            if (clockwise) {
+                tap_code(MS_WHLD);  // Scroll down
+            } else {
+                tap_code(MS_WHLU);  // Scroll up
+            }
+        } else {
+            // Cursor Mode: move cursor left/right
+            if (clockwise) {
+                tap_code(KC_RGHT);
+            } else {
+                tap_code(KC_LEFT);
+            }
+        }
+        return false; // Skip default encoder_map processing for the right encoder.
+    }
+    return true; // For other encoders, fall back to the encoder_map.
+}
+
+#if defined(ENCODER_MAP_ENABLE)
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
+    [_QWERTY] = {
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_LEFT, KC_RGHT)
+    },
+    [_LOWER] = {
+        ENCODER_CCW_CW(KC_BRID, KC_BRIU),
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_DOWN, KC_UP)
+    },
+    [_RAISE] = {
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(MS_WHLU, MS_WHLD),
+    },
+    [_ADJUST] = {
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT),
+    },
+    [_NUMPAD] = {
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT),
+    },
+    [_COLEMAK] = {
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT),
+    },
+};
+#endif
