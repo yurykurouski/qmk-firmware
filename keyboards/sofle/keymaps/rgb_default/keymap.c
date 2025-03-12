@@ -82,9 +82,9 @@ enum custom_keycodes {
     KC_D_MUTE
 };
 
-#define KC_QWERTY PDF(_QWERTY)
-#define KC_COLEMAK PDF(_COLEMAK)
-#define KC_COLEMAKDH PDF(_COLEMAKDH)
+#define KC_QWERTY DF(_QWERTY)
+#define KC_COLEMAK DF(_COLEMAK)
+#define KC_COLEMAKDH DF(_COLEMAKDH)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
