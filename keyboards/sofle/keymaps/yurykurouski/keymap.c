@@ -316,7 +316,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
                   KC_NO,    KC_NO,   KC_NO,   KC_NO,   KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO
   //            \--------+--------+--------+---------+-------|   |--------+---------+--------+---------+-------/
-
 	),
 };
 
@@ -328,7 +327,6 @@ char layer_state_str[70];
 // Light on inner column and underglow
 const rgblight_segment_t PROGMEM layer_qwerty_lights[] = RGBLIGHT_LAYER_SEGMENTS(
   SET_LAYER_ID(HSV_CORAL)
-
 );
 const rgblight_segment_t PROGMEM layer_colemakdh_lights[] = RGBLIGHT_LAYER_SEGMENTS(
   SET_LAYER_ID(HSV_PINK)
@@ -369,7 +367,6 @@ const rgblight_segment_t PROGMEM layer_switcher_lights[] = RGBLIGHT_LAYER_SEGMEN
 );
 
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
-
     layer_qwerty_lights,
 	layer_num_lights,// overrides layer 1
 	layer_symbol_lights,
@@ -396,7 +393,6 @@ void keyboard_post_init_user(void) {
     rgblight_layers = my_rgb_layers;
 
 	rgblight_mode(10);// haven't found a way to set this in a more useful way
-
 }
 #endif
 
