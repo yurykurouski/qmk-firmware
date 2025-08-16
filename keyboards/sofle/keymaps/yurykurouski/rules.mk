@@ -10,4 +10,7 @@ LTO_ENABLE = yes
 OLED_ENABLE = yes
 COMBO_ENABLE = yes
 
+# Enable WPM feature
+WPM_ENABLE = yes
+
 CONVERT_TO=rp2040_ce

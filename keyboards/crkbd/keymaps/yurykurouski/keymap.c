@@ -13,7 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+calong with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
@@ -40,7 +40,8 @@ enum custom_keycodes {
     BACKSPACE_TWO_PRESS,
     REDO_TWO_PRESS,
     NUMPAD,
-    SCROLL_MODE
+    SCROLL_MODE,
+    TD_LANG_SWITCH,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -58,9 +59,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_QWERTY] = LAYOUT_split_3x6_3_ex2(
   //,--------------------------------------------------------------.                            ,--------------------------------------------------------------.
-       KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, TO(_COLEMAK),                            KC_BRIU,    KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
+       KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, KC_VOLU,                            LGUI(LSFT(KC_A)),    KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------+--------|                            |--------+--------+--------+--------+--------+--------+--------|
-      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, KC_HOME,                            KC_END,    KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
+      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, KC_MUTE,                            KC_RIGHT,    KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
   //|--------+--------+--------+--------+--------+--------+--------'                            `--------+--------+--------+--------+--------+--------+--------|
       KC_LOPT,   KC_Z,    KC_X,    KC_C,    KC_V,   KC_B,                                                  KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  TD(TD_ESC_CAPS),
   //|--------+--------+--------+--------+--------+--------+--------.                            .--------+--------+--------+--------+--------+--------+--------|
@@ -125,7 +126,7 @@ void keyboard_post_init_user(void) {
 // Tap Dance definitions
 tap_dance_action_t tap_dance_actions[] = {
     // Tap once for Escape, twice for Caps Lock
-    [TD_ESC_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS)
+    [TD_ESC_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS),
 };
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
@@ -245,32 +246,32 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
     [_QWERTY] = {
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
-        ENCODER_CCW_CW(KC_LEFT, KC_RGHT)
+        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT)
+    },
+    [_COLEMAK] = {
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT)
     },
     [_LOWER] = {
-        ENCODER_CCW_CW(KC_BRID, KC_BRIU),
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
+        ENCODER_CCW_CW(KC_BRID, KC_BRIU),
         ENCODER_CCW_CW(KC_DOWN, KC_UP)
     },
     [_RAISE] = {
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
-        ENCODER_CCW_CW(MS_WHLU, MS_WHLD),
+        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT)
     },
     [_ADJUST] = {
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
-        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT),
+        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT)
     },
     [_NUMPAD] = {
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
-        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT),
-    },
-    [_COLEMAK] = {
-        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
-        ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
-        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT),
+        ENCODER_CCW_CW(KC_LEFT, KC_RIGHT)
     },
 };
 #endif

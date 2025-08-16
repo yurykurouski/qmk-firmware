@@ -78,7 +78,7 @@ enum custom_keycodes {
     KC_LOWER = SAFE_RANGE,
     KC_RAISE,
     KC_ADJUST,
-    KC_D_MUTE
+    KC_D_MUTE,
 };
 
 // Then create a new enum for combo indices
@@ -91,6 +91,17 @@ enum combo_events {
 #define KC_QWERTY DF(_QWERTY)
 #define KC_COLEMAK DF(_COLEMAK)
 #define KC_COLEMAKDH DF(_COLEMAKDH)
+
+// Define the mod-tap keys for the home row
+/* #define HOME_A LGUI_T(KC_A)  // A acts as GUI (Cmd/Win) when held
+#define HOME_S LALT_T(KC_S)  // S acts as Alt when held
+#define HOME_D LSFT_T(KC_D)  // D acts as Shift when held
+#define HOME_F LCTL_T(KC_F)  // F acts as Ctrl when held
+
+#define HOME_J RCTL_T(KC_J)  // J acts as Ctrl when held
+#define HOME_K RSFT_T(KC_K)  // K acts as Shift when held
+#define HOME_L RALT_T(KC_L)  // L acts as Alt when held
+#define HOME_SCLN RGUI_T(KC_SCLN)  // ; acts as GUI (Cmd/Win) when held */
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
@@ -398,7 +409,7 @@ void keyboard_post_init_user(void) {
 
 #ifdef OLED_ENABLE
 
-static void render_logo(void) {
+/* static void render_logo(void) {
     static const char PROGMEM qmk_logo[] = {
         0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F, 0x90, 0x91, 0x92, 0x93, 0x94,
         0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF, 0xB0, 0xB1, 0xB2, 0xB3, 0xB4,
@@ -406,26 +417,60 @@ static void render_logo(void) {
     };
 
     oled_write_P(qmk_logo, false);
+} */
+
+  static void print_status_narrow(void) {
+    // oled_write_ln_P(PSTR("LAYER\n"), false);
+
+    switch (get_highest_layer(layer_state)) {
+        case _COLEMAK:
+        case _QWERTY:
+        case _COLEMAKDH:
+            oled_write_ln_P("BBBB \nB   B\nBBBB \nB   B\nBBBB \n\n\n\n", false);
+
+            break;
+        case _RAISE:
+            oled_write_ln_P("RRRR \nR   R\nRRRR \nR  R \nR   R\n", false);
+
+            break;
+        case _LOWER:
+            oled_write_ln_P("L    \nL    \nL    \nL    \nLLLLL\n", false);
+
+            break;
+        case _ADJUST:
+            oled_write_ln_P(" AAA \nA   A\nAAAAA\nA   A\nA   A\n", false);
+
+            break;
+        case _NUMPAD:
+            oled_write_ln_P("N   N\nNN  N\nN N N\nN  NN\nN   N\n", false);
+
+            break;
+        case _SWITCH:
+            oled_write_ln_P(" SSS \nS    \n SSS \n    S\nSSSS \n", false);
+
+            break;
+        default:
+            oled_write_ln_P("U   U\nU   U\nU   U\nU   U\n UUU \n", false);
+    }
 }
 
-static void print_status_narrow(void) {
+static void print_status_slave(void) {
     // Print current mode
     oled_write_P(PSTR("\n\n"), false);
 
     oled_write_ln_P(PSTR(""), false);
 
-	//snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Undef-%ld", layer_state)
-
-
     switch (get_highest_layer(default_layer_state)) {
         case _QWERTY:
-            oled_write_ln_P(PSTR("Qwrt"), false);
+            oled_write_ln_P(PSTR("QWRT"), false);
             break;
         case _COLEMAK:
-            oled_write_ln_P(PSTR("Clmk"), false);
+            oled_write_ln_P(PSTR("CLMK"), false);
             break;
         case _COLEMAKDH:
-            oled_write_ln_P(PSTR("CmkDH"), false);
+            oled_write_ln_P(PSTR("CLMK"), false);
+            oled_write_ln_P(PSTR("DH"), false);
+
             break;
 
         default:
@@ -434,36 +479,18 @@ static void print_status_narrow(void) {
     oled_write_P(PSTR("\n\n"), false);
     // Print current layer
     oled_write_ln_P(PSTR("-----"), false);
+}
 
-    oled_write_P(PSTR("\n\n"), false);
-    switch (get_highest_layer(layer_state)) {
-        case _COLEMAK:
-        case _QWERTY:
-        case _COLEMAKDH:
-            oled_write_P(PSTR("BASE\n"), false);
-            break;
-        case _RAISE:
-            oled_write_P(PSTR("RAISE"), false);
-            break;
-        case _LOWER:
-            oled_write_P(PSTR("LOWER"), false);
-            break;
-        case _ADJUST:
-            oled_write_P(PSTR("ADJ\n"), false);
-            break;
-        case _NUMPAD:
-            oled_write_P(PSTR("NUMP\n"), false);
-            break;
-        case _SWITCH:
-            oled_write_P(PSTR("SWIT\n"), false);
-            break;
-        default:
-            oled_write_ln_P(PSTR("UNDEF"), false);
-    }
+static void render_wpm(void) {
+    char wpm_str[10];
+    snprintf(wpm_str, sizeof(wpm_str), "%d", get_current_wpm());
+    oled_write_ln(wpm_str, false);
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (is_keyboard_master()) {
+        return OLED_ROTATION_270;
+    } else {
         return OLED_ROTATION_270;
     }
     return rotation;
@@ -472,8 +499,9 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         print_status_narrow();
+        render_wpm(); // Display WPM on master OLED
     } else {
-        render_logo();
+        print_status_slave();
     }
     return false;
 }
@@ -524,7 +552,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
     [_QWERTY] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_LEFT, KC_RIGHT) },
     [_COLEMAK] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_LEFT, KC_RIGHT) },
-    [_COLEMAKDH] = { ENCODER_CCW_CW(KC_NO, KC_NO), ENCODER_CCW_CW(KC_LEFT, KC_RIGHT) },
+    [_COLEMAKDH] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_LEFT, KC_RIGHT) },
     [_LOWER] = { ENCODER_CCW_CW(KC_BRID, KC_BRIU), ENCODER_CCW_CW(KC_UP, KC_DOWN) },
     [_RAISE] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_LEFT, KC_RIGHT) },
     [_ADJUST] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_LEFT, KC_RIGHT) },
