@@ -404,6 +404,8 @@ void keyboard_post_init_user(void) {
     rgblight_layers = my_rgb_layers;
 
 	rgblight_mode(10);// haven't found a way to set this in a more useful way
+	rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    rgb_matrix_sethsv_noeeprom(HSV_OFF);
 }
 #endif
 
