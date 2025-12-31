@@ -256,7 +256,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
     [_LOWER] = {
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
         ENCODER_CCW_CW(KC_BRID, KC_BRIU),
-        ENCODER_CCW_CW(KC_DOWN, KC_UP)
+        ENCODER_CCW_CW(KC_UP, KC_DOWN)
     },
     [_RAISE] = {
         ENCODER_CCW_CW(KC_VOLD, KC_VOLU),
