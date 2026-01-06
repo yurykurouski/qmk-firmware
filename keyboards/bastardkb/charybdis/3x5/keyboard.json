@@ -12,10 +12,10 @@
         "split_count": [18, 18]
     },
     "matrix_pins": {
-        "cols": ["GP28", "GP21", "GP6", "GP7", "GP8"],
-        "rows": ["GP26", "GP5", "GP4", "GP9"]
+        "cols": ["GP27", "GP28", "GP21", "GP6", "GP7"],
+        "rows": ["GP29", "GP26", "GP5", "GP4"]
     },
-    "diode_direction": "ROW2COL",
+    "diode_direction": "COL2ROW",
     "split": {
         "serial": {
             "pin": "GP1"
@@ -28,7 +28,7 @@
         "bootmagic": true,
         "mousekey": true,
         "extrakey": true,
-        "rgb_matrix": true,
+        "rgb_matrix": false,
         "pointing_device": true
     },
     "ws2812": {
