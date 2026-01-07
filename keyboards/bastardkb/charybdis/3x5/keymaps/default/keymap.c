@@ -112,8 +112,8 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define LAYOUT_LAYER_POINTER                                                                  \
     QK_BOOT,  EE_CLR, XXXXXXX, DPI_MOD, S_D_MOD, S_D_MOD, DPI_MOD, XXXXXXX,  EE_CLR, QK_BOOT, \
     ______________HOME_ROW_GACS_L______________, ______________HOME_ROW_GACS_R______________, \
-    _______, DRGSCRL, SNIPING, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SNIPING, DRGSCRL, _______, \
-                      KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN3, KC_BTN1
+    _______, DRGSCRL, SNIPING, XXXXXXX, XXXXXXX, XXXXXXX, KC_BTN1, SNIPING, DRGSCRL, _______, \
+                      KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN2, KC_BTN3
 
 /**
  * \brief Navigation layer.
