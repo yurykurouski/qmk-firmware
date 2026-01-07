@@ -91,9 +91,9 @@ static uint16_t auto_pointer_layer_timer = 0;
  * from the base layer to enable auto-repeat.
  */
 #define LAYOUT_LAYER_FUNCTION                                                                 \
-    _______________DEAD_HALF_ROW_______________, KC_PSCR,   KC_F7,   KC_F8,   KC_F9,  KC_F12, \
-    KC_LGUI, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4), KC_SCRL,   KC_F4,   KC_F5,   KC_F6,  KC_F11, \
-    _______________DEAD_HALF_ROW_______________, KC_PAUS,   KC_F1,   KC_F2,   KC_F3,  LCTL(KC_DOWN), \
+    KC_1, KC_2, KC_3, KC_4, KC_5, KC_6,   KC_7,   KC_8,   KC_9,  KC_0, \
+    KC_LGUI, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4), XXXXXXX,   KC_UP,   KC_F5,   KC_F6,  LCTL(KC_UP), \
+    _______________DEAD_HALF_ROW_______________, KC_LEFT,   KC_DOWN,   KC_RIGHT,  XXXXXXX,  LCTL(KC_DOWN), \
                       XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX
 
 /**
