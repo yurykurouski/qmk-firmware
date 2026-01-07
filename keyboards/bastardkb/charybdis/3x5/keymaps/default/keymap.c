@@ -91,10 +91,10 @@ static uint16_t auto_pointer_layer_timer = 0;
  * from the base layer to enable auto-repeat.
  */
 #define LAYOUT_LAYER_FUNCTION                                                                 \
-    KC_1, KC_2, KC_3, KC_4, KC_5, KC_6,   KC_7,   KC_8,   KC_9,  KC_0, \
-    KC_LGUI, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4), XXXXXXX,   KC_UP,   KC_F5,   KC_F6,  LCTL(KC_UP), \
-    _______________DEAD_HALF_ROW_______________, KC_LEFT,   KC_DOWN,   KC_RIGHT,  XXXXXXX,  LCTL(KC_DOWN), \
-                      XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX
+    KC_1, KC_2, KC_3, KC_4, KC_5,                               KC_6,   KC_7,   KC_8,   KC_9,  KC_0, \
+    KC_LGUI, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4),    KC_PGUP,   KC_UP,   KC_PGDN,   KC_F6,  LCTL(KC_UP), \
+    KC_BRID, KC_BRIU, KC_VOLD, KC_MUTE, KC_VOLU,                KC_LEFT,   KC_DOWN,   KC_RIGHT,  KC_HOME,  LCTL(KC_DOWN), \
+                      XXXXXXX, _______, XXXXXXX,                XXXXXXX, XXXXXXX
 
 /**
  * \brief Media layer.
@@ -137,9 +137,9 @@ static uint16_t auto_pointer_layer_timer = 0;
  * `KC_DOT` is duplicated from the base layer.
  */
 #define LAYOUT_LAYER_NUMERAL                                                                  \
-    KC_LBRC,    KC_7,    KC_8,    KC_9, KC_RBRC, _______________DEAD_HALF_ROW_______________, \
-    KC_SCLN,    KC_4,    KC_5,    KC_6,  KC_EQL, ______________HOME_ROW_GACS_R______________, \
-     KC_GRV,    KC_1,    KC_2,    KC_3, KC_BSLS, _______________DEAD_HALF_ROW_______________, \
+    _______________DEAD_HALF_ROW_______________, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, \
+    ______________HOME_ROW_GACS_L______________, KC_MINS,  KC_EQL, KC_LBRC, KC_RBRC, KC_BSLS, \
+    _______________DEAD_HALF_ROW_______________, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
                        KC_DOT,    KC_0, KC_MINS, XXXXXXX, _______
 
 /**
