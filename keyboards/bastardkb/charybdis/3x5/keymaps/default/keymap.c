@@ -30,6 +30,14 @@ enum charybdis_keymap_layers {
     LAYER_SYMBOLS,
 };
 
+enum custom_keycodes {
+    TAB_ESC,
+    ENTER_TWO_PRESS,
+    BACKSPACE_TWO_PRESS,
+    REDO_TWO_PRESS,
+};
+
+
 // Automatically enable sniping-mode on the pointer layer.
 // #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
 
@@ -45,7 +53,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD
 #endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
-#define ESC_MED LT(LAYER_MEDIA, KC_ESC)
+#define ESC_MED LT(LAYER_ME DIA, KC_ESC)
 #define SPC_NAV LT(LAYER_NAVIGATION, KC_SPC)
 #define TAB_FUN LT(LAYER_FUNCTION, KC_TAB)
 #define ENT_SYM LT(LAYER_SYMBOLS, KC_ENT)
@@ -63,9 +71,9 @@ static uint16_t auto_pointer_layer_timer = 0;
 /** \brief QWERTY layout (3 rows, 10 columns). */
 #define LAYOUT_LAYER_BASE                                                                     \
        KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, \
-       KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L, KC_QUOT, \
+       KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, \
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, \
-                      ESC_MED, TAB_FUN, SPC_NAV, ENT_SYM, BSP_NUM
+                      KC_LGUI, TAB_FUN, SPC_NAV, ENT_SYM, BSP_NUM
 
 /** Convenience row shorthands. */
 #define _______________DEAD_HALF_ROW_______________ XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
@@ -94,7 +102,7 @@ static uint16_t auto_pointer_layer_timer = 0;
     KC_1, KC_2, KC_3, KC_4, KC_5,                               KC_6,   KC_7,   KC_8,   KC_9,  KC_0, \
     KC_LGUI, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4),    KC_PGUP,   KC_UP,   KC_PGDN,   KC_F6,  LCTL(KC_UP), \
     KC_BRID, KC_BRIU, KC_VOLD, KC_MUTE, KC_VOLU,                KC_LEFT,   KC_DOWN,   KC_RIGHT,  KC_HOME,  LCTL(KC_DOWN), \
-                      XXXXXXX, _______, XXXXXXX,                LGUI(KC_LBRC), LGUI(KC_RBRC)
+                        XXXXXXX, _______, KC_MPLY,                LGUI(KC_LBRC), LGUI(KC_RBRC)
 
 /**
  * \brief Media layer.
@@ -255,3 +263,15 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // rgb_matrix.c.
 void rgb_matrix_update_pwm_buffers(void);
 #endif
+
+const uint16_t PROGMEM tab_esc_combo[] = {KC_Q, KC_W, COMBO_END};
+const uint16_t PROGMEM backspace_two_press_combo[] = {KC_W, KC_E, COMBO_END};
+const uint16_t PROGMEM enter_two_press_combo[] = {KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM redo_two_press_combo[] = {KC_LOPT, KC_Z, COMBO_END};
+
+combo_t key_combos[] = {
+  [TAB_ESC] = COMBO(tab_esc_combo, KC_ESC),
+  [ENTER_TWO_PRESS] = COMBO(enter_two_press_combo, KC_ENT),
+  [BACKSPACE_TWO_PRESS] = COMBO(backspace_two_press_combo, KC_BSPC),
+  [REDO_TWO_PRESS] = COMBO(redo_two_press_combo, LGUI(LSFT(KC_Z))),
+};
