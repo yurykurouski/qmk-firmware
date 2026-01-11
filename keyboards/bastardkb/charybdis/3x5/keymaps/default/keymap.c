@@ -100,7 +100,7 @@ static uint16_t auto_pointer_layer_timer = 0;
  */
 #define LAYOUT_LAYER_FUNCTION                                                                 \
     KC_1, KC_2, KC_3, KC_4, KC_5,                               KC_6,   KC_7,   KC_8,   KC_9,  KC_0, \
-    KC_LGUI, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4),    KC_PGUP,   KC_UP,   KC_PGDN,   KC_F6,  LCTL(KC_UP), \
+    KC_LSFT, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4),    KC_PGUP,   KC_UP,   KC_PGDN,   KC_F6,  LCTL(KC_UP), \
     KC_BRID, KC_BRIU, KC_VOLD, KC_MUTE, KC_VOLU,                KC_LEFT,   KC_DOWN,   KC_RIGHT,  KC_HOME,  LCTL(KC_DOWN), \
                         XXXXXXX, _______, KC_MPLY,                LGUI(KC_LBRC), LGUI(KC_RBRC)
 
