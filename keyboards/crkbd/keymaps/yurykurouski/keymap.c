@@ -44,6 +44,10 @@ enum custom_keycodes {
     TD_LANG_SWITCH,
 };
 
+enum my_custom_keycodes {
+    PG_TAP_HOLD = SAFE_RANGE,
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAK] = LAYOUT_split_3x6_3_ex2(
     //,--------------------------------------------------------------.                            ,--------------------------------------------------------------.
@@ -59,9 +63,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_QWERTY] = LAYOUT_split_3x6_3_ex2(
   //,--------------------------------------------------------------.                            ,--------------------------------------------------------------.
-       KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, KC_VOLU,                            LGUI(LSFT(KC_A)),    KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
+       KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, LGUI(LSFT(KC_4)),                   LGUI(LSFT(KC_A)),    KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------+--------|                            |--------+--------+--------+--------+--------+--------+--------|
-      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, KC_MUTE,                            KC_RIGHT,    KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
+      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, KC_MUTE,                            PG_TAP_HOLD, KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
   //|--------+--------+--------+--------+--------+--------+--------'                            `--------+--------+--------+--------+--------+--------+--------|
       KC_LOPT,   KC_Z,    KC_X,    KC_C,    KC_V,   KC_B,                                                  KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  TD(TD_ESC_CAPS),
   //|--------+--------+--------+--------+--------+--------+--------.                            .--------+--------+--------+--------+--------+--------+--------|
@@ -202,8 +206,21 @@ combo_t key_combos[] = {
 
 static bool right_encoder_scroll_enabled = false;
 
+static uint16_t pg_timer;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case PG_TAP_HOLD:
+            if (record->event.pressed) {
+                pg_timer = timer_read();
+            } else {
+                if (timer_elapsed(pg_timer) < 200) { // 200ms tapping term
+                    tap_code(KC_PGDN);
+                } else {
+                    tap_code(KC_PGUP);
+                }
+            }
+            return false;
         case KC_BRIU:
             if (record->event.pressed) {
                 // Toggle the right encoder mode whenever KC_BRIU is pressed.
