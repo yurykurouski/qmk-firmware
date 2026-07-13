@@ -46,6 +46,7 @@ enum custom_keycodes {
 
 enum my_custom_keycodes {
     PG_TAP_HOLD = SAFE_RANGE,
+    SCREEN_TAP_HOLD,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -63,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_QWERTY] = LAYOUT_split_3x6_3_ex2(
   //,--------------------------------------------------------------.                            ,--------------------------------------------------------------.
-       KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, LGUI(LSFT(KC_4)),                   LGUI(LSFT(KC_A)),    KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
+       KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, SCREEN_TAP_HOLD,                    LGUI(LSFT(KC_A)),    KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------+--------|                            |--------+--------+--------+--------+--------+--------+--------|
       KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G, KC_MUTE,                            PG_TAP_HOLD, KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
   //|--------+--------+--------+--------+--------+--------+--------'                            `--------+--------+--------+--------+--------+--------+--------|
@@ -207,9 +208,21 @@ combo_t key_combos[] = {
 static bool right_encoder_scroll_enabled = false;
 
 static uint16_t pg_timer;
+static uint16_t screen_timer;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case SCREEN_TAP_HOLD:
+            if (record->event.pressed) {
+                screen_timer = timer_read();
+            } else {
+                if (timer_elapsed(screen_timer) < 200) { // 200ms tapping term
+                    tap_code16(LGUI(LSFT(KC_4)));
+                } else {
+                    tap_code16(LGUI(LSFT(KC_5)));
+                }
+            }
+            return false;
         case PG_TAP_HOLD:
             if (record->event.pressed) {
                 pg_timer = timer_read();
