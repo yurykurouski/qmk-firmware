@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define RGBLED_SPLIT { 23, 23 }
-#define RGBLIGHT_LED_COUNT 46
+// #define RGBLED_SPLIT { 23, 23 }
+// #define RGBLIGHT_LED_COUNT 46
 #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_TRANSPORT_MIRROR
 #define SPLIT_LED_STATE_ENABLE
